@@ -1,6 +1,8 @@
 import { Paper, Stack, Typography } from "@mui/material";
 import { AppShell } from "@/components/app-shell";
-import { env } from "@/lib/env";
+import { getStorageProviderLabel } from "@/lib/env";
+
+export const dynamic = "force-dynamic";
 
 export default function SettingsPage() {
   return (
@@ -11,7 +13,7 @@ export default function SettingsPage() {
         </Typography>
         <Paper variant="outlined" sx={{ p: 3 }}>
           <Typography variant="subtitle2">Storage provider</Typography>
-          <Typography color="text.secondary">{env.STORAGE_PROVIDER}</Typography>
+          <Typography color="text.secondary">{getStorageProviderLabel()}</Typography>
         </Paper>
       </Stack>
     </AppShell>

@@ -14,4 +14,12 @@ const envSchema = z.object({
   S3_PUBLIC_BASE_URL: z.string().optional(),
 });
 
-export const env = envSchema.parse(process.env);
+export type ServerEnv = z.infer<typeof envSchema>;
+
+export function getServerEnv(): ServerEnv {
+  return envSchema.parse(process.env);
+}
+
+export function getStorageProviderLabel() {
+  return process.env.STORAGE_PROVIDER ?? "r2";
+}
