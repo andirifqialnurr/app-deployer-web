@@ -1,0 +1,97 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum AppPlatform {
+  ANDROID
+}
+
+enum ReleaseChannel {
+  DEV
+  STABLE
+}
+
+enum StorageProvider {
+  S3
+  R2
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model MobileApp {
+  id          String       @id @default(cuid())
+  name        String
+  packageName String       @unique
+  platform    AppPlatform  @default(ANDROID)
+  iconUrl     String?
+  description String?
+  isActive    Boolean      @default(true)
+  releases    AppRelease[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model AppRelease {
+  id            String         @id @default(cuid())
+  appId         String
+  app           MobileApp      @relation(fields: [appId], references: [id], onDelete: Cascade)
+  channel       ReleaseChannel @default(STABLE)
+  versionName   String
+  versionCode   Int
+  changelog     String?
+  apkObjectKey  String
+  apkSizeBytes  BigInt
+  apkSha256     String
+  minSdkVersion Int?
+  isActive      Boolean        @default(true)
+  storageObject StorageObject?
+  installEvents InstallEvent[]
+  createdAt     DateTime       @default(now())
+
+  @@unique([appId, channel, versionCode])
+  @@index([appId, channel, isActive, versionCode])
+}
+
+model StorageObject {
+  id          String          @id @default(cuid())
+  provider    StorageProvider @default(R2)
+  bucket      String
+  objectKey   String          @unique
+  contentType String
+  sizeBytes   BigInt
+  sha256      String
+  releaseId   String          @unique
+  release     AppRelease      @relation(fields: [releaseId], references: [id], onDelete: Cascade)
+  createdAt   DateTime        @default(now())
+}
+
+model Device {
+  id            String         @id @default(cuid())
+  label         String?
+  fingerprint   String         @unique
+  platform      AppPlatform     @default(ANDROID)
+  installEvents InstallEvent[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+model InstallEvent {
+  id         String     @id @default(cuid())
+  deviceId   String
+  device     Device     @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  releaseId  String
+  release    AppRelease @relation(fields: [releaseId], references: [id], onDelete: Cascade)
+  installedAt DateTime  @default(now())
+}
