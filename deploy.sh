@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-cd /opt/apps/app-deployer-web
+cd /opt/apps/app-deployer/app-deployer-web
 
 echo "Pulling latest code ..."
 git pull origin main
