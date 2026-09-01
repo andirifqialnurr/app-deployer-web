@@ -12,6 +12,9 @@ const envSchema = z.object({
   S3_ACCESS_KEY_ID: z.string(),
   S3_SECRET_ACCESS_KEY: z.string(),
   S3_PUBLIC_BASE_URL: z.string().optional(),
+  DEPLOYER_MOBILE_APK_OBJECT_KEY: z.string().optional(),
+  DEPLOYER_MOBILE_VERSION_NAME: z.string().optional(),
+  DEPLOYER_MOBILE_VERSION_CODE: z.string().optional(),
 });
 
 export type ServerEnv = z.infer<typeof envSchema>;
@@ -22,4 +25,15 @@ export function getServerEnv(): ServerEnv {
 
 export function getStorageProviderLabel() {
   return process.env.STORAGE_PROVIDER ?? "r2";
+}
+
+export function getDeployerMobileConfig() {
+  const objectKey = process.env.DEPLOYER_MOBILE_APK_OBJECT_KEY?.trim();
+
+  return {
+    configured: Boolean(objectKey),
+    objectKey,
+    versionName: process.env.DEPLOYER_MOBILE_VERSION_NAME?.trim() || "Not set",
+    versionCode: process.env.DEPLOYER_MOBILE_VERSION_CODE?.trim() || "Not set",
+  };
 }

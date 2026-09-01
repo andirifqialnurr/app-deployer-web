@@ -3,6 +3,7 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import StorageIcon from "@mui/icons-material/Storage";
 import { Grid, Stack, Typography } from "@mui/material";
 import { AppShell } from "@/components/app-shell";
+import { MobileClientCard } from "@/components/mobile-client-card";
 import { StatCard } from "@/components/stat-card";
 import { formatBytes } from "@/lib/format";
 import { db } from "@/server/db";
@@ -25,6 +26,7 @@ export default async function DashboardPage() {
         <Typography variant="body1" color="text.secondary">
           Ringkasan distribusi APK personal.
         </Typography>
+        <MobileClientCard />
         <Grid container spacing={2}>
           <Grid item xs={12} md={4}>
             <StatCard icon={<AppsIcon />} label="Apps" value={String(appCount)} />

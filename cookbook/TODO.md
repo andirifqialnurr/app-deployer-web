@@ -20,6 +20,7 @@
 
 ## Phase 3: Admin UI
 
+- [x] Dashboard mobile client download card.
 - [x] App create form.
 - [x] App detail page.
 - [x] Release upload form.
@@ -41,6 +42,7 @@
 
 ## Phase 5: Mobile API
 
+- [x] Bootstrap App Deployer Mobile download endpoint.
 - [x] Public endpoint for app list.
 - [x] Public endpoint for latest release by package name.
 - [x] Signed download URL endpoint.
