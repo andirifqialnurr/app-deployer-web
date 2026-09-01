@@ -3,8 +3,26 @@ node_modules
 out
 dist
 coverage
-.env.local
-.env.production
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Deployment and tool caches
 .vercel
+.turbo
+.bun
+
+# Logs and local databases
 *.log
 prisma/dev.db
+*.db
+*.sqlite
+*.sqlite3
+
+# OS and editor noise
+.DS_Store
+Thumbs.db
+.idea
+.vscode
