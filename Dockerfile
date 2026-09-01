@@ -1,14 +1,20 @@
-FROM oven/bun:1-alpine AS builder
+FROM oven/bun:1-slim AS builder
 WORKDIR /app
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends openssl ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 COPY package.json bun.lock ./
 RUN bun install --frozen-lockfile
 COPY . .
 RUN bunx prisma generate
 RUN bun run build
 
-FROM oven/bun:1-alpine AS runner
+FROM oven/bun:1-slim AS runner
 WORKDIR /app
 ENV NODE_ENV=production
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends openssl ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/public ./public
