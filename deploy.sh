@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-cd /opt/apps/app-deployer/app-deployer-web
+cd "$(dirname "$0")"
 
 echo "Pulling latest code ..."
 git pull origin main
@@ -13,7 +13,7 @@ echo "Starting database ..."
 docker compose up -d postgres
 
 echo "Running database migrations ..."
-docker compose run --rm web npx prisma migrate deploy
+docker compose run --rm web bunx prisma migrate deploy
 
 echo "Starting application ..."
 docker compose up -d --build

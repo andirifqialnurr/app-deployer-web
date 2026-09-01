@@ -1,0 +1,17 @@
+node_modules
+.next
+out
+dist
+coverage
+.git
+.env
+.env.*
+!.env.example
+*.log
+*.db
+*.sqlite
+*.sqlite3
+.DS_Store
+Thumbs.db
+.idea
+.vscode
