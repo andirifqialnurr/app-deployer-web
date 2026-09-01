@@ -27,6 +27,7 @@ export function UploadReleaseForm({ apps }: { apps: AppOption[] }) {
   const [state, setState] = useState<UploadState>("idle");
   const [message, setMessage] = useState("");
   const [progress, setProgress] = useState(0);
+  const [fileName, setFileName] = useState("");
 
   const disabled = state === "hashing" || state === "uploading" || state === "saving";
   const statusLabel = useMemo(() => {
@@ -54,6 +55,12 @@ export function UploadReleaseForm({ apps }: { apps: AppOption[] }) {
       return;
     }
 
+    if (!file.name.toLowerCase().endsWith(".apk")) {
+      setState("error");
+      setMessage("File harus berformat APK.");
+      return;
+    }
+
     try {
       setMessage("");
       setProgress(0);
@@ -66,6 +73,7 @@ export function UploadReleaseForm({ apps }: { apps: AppOption[] }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           appId,
+          channel,
           versionCode,
           fileName: file.name,
           contentType: file.type || "application/vnd.android.package-archive",
@@ -106,6 +114,7 @@ export function UploadReleaseForm({ apps }: { apps: AppOption[] }) {
 
       setState("done");
       setMessage("Release berhasil disimpan.");
+      setFileName("");
       event.currentTarget.reset();
       router.refresh();
     } catch (error) {
@@ -148,10 +157,23 @@ export function UploadReleaseForm({ apps }: { apps: AppOption[] }) {
           disabled={disabled}
           inputProps={{ maxLength: 500 }}
         />
-        <Button component="label" variant="outlined" startIcon={<CloudUploadIcon />} disabled={disabled}>
-          Select APK
-          <input name="apk" type="file" accept=".apk,application/vnd.android.package-archive" hidden />
-        </Button>
+        <Stack direction={{ xs: "column", sm: "row" }} spacing={2} alignItems={{ sm: "center" }}>
+          <Button component="label" variant="outlined" startIcon={<CloudUploadIcon />} disabled={disabled}>
+            Select APK
+            <input
+              name="apk"
+              type="file"
+              accept=".apk,application/vnd.android.package-archive"
+              hidden
+              onChange={(event) => setFileName(event.target.files?.[0]?.name ?? "")}
+            />
+          </Button>
+          {fileName && (
+            <Typography variant="body2" color="text.secondary">
+              {fileName}
+            </Typography>
+          )}
+        </Stack>
         {disabled && (
           <Stack spacing={1}>
             <Typography variant="body2" color="text.secondary">

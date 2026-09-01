@@ -12,33 +12,33 @@
 
 ## Phase 2: Database
 
-- [ ] Install dependencies.
-- [ ] Run `npx prisma generate`.
-- [ ] Run first migration.
-- [ ] Seed admin user.
-- [ ] Add uniqueness validation for package names and version codes.
+- [x] Install dependencies.
+- [x] Run Prisma generate.
+- [x] Run first migration.
+- [x] Use Basic Auth env for MVP admin access.
+- [x] Add uniqueness validation for package names and version codes.
 
 ## Phase 3: Admin UI
 
-- [ ] App create form.
-- [ ] App detail page.
-- [ ] Release upload form.
-- [ ] Release list per app.
-- [ ] Storage settings read-only panel.
+- [x] App create form.
+- [x] App detail page.
+- [x] Release upload form.
+- [x] Release list per app.
+- [x] Storage settings read-only panel.
 
 ## Phase 4: Upload Flow
 
-- [ ] Generate signed upload URL.
-- [ ] Upload APK to S3/R2.
-- [ ] Calculate SHA-256 client-side or server-side.
-- [ ] Save release metadata after upload succeeds.
-- [ ] Validate APK content type and file extension.
+- [x] Generate signed upload URL.
+- [x] Upload APK to S3/R2.
+- [x] Calculate SHA-256 client-side.
+- [x] Save release metadata after upload succeeds.
+- [x] Validate APK file extension.
 
 ## Phase 5: Mobile API
 
-- [ ] Public endpoint for app list.
-- [ ] Public endpoint for latest release by package name.
-- [ ] Signed download URL endpoint.
+- [x] Public endpoint for app list.
+- [x] Public endpoint for latest release by package name.
+- [x] Signed download URL endpoint.
 - [ ] Optional token auth for private access.
 
 ## Phase 6: VPS Deployment

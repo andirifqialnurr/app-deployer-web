@@ -19,7 +19,8 @@ export const releaseRouter = createTRPCRouter({
       z.object({
         appId: z.string().min(1),
         versionCode: z.number().int().positive(),
-        fileName: z.string().min(1).max(120),
+        fileName: z.string().min(1).max(120).refine((value) => value.toLowerCase().endsWith(".apk")),
+        channel: z.enum(["DEV", "STABLE"]).default("STABLE"),
         contentType: z.string().default("application/vnd.android.package-archive"),
       }),
     )
@@ -27,6 +28,20 @@ export const releaseRouter = createTRPCRouter({
       const app = await ctx.db.mobileApp.findUniqueOrThrow({
         where: { id: input.appId },
       });
+      const existingRelease = await ctx.db.appRelease.findUnique({
+        where: {
+          appId_channel_versionCode: {
+            appId: input.appId,
+            channel: input.channel,
+            versionCode: input.versionCode,
+          },
+        },
+      });
+
+      if (existingRelease) {
+        throw new Error("Version code already exists for this app and channel.");
+      }
+
       const objectKey = buildApkObjectKey({
         packageName: app.packageName,
         versionCode: input.versionCode,

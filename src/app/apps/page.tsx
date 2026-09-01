@@ -1,5 +1,6 @@
 import AddIcon from "@mui/icons-material/Add";
 import AndroidIcon from "@mui/icons-material/Android";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import {
   Button,
   Box,
@@ -12,6 +13,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import Link from "next/link";
 import { AppShell } from "@/components/app-shell";
 import { createAppAction } from "@/server/actions/apps";
 import { db } from "@/server/db";
@@ -74,6 +76,14 @@ export default async function AppsPage() {
                           : app.packageName
                       }
                     />
+                    <Button
+                      component={Link}
+                      href={`/apps/${app.id}`}
+                      endIcon={<OpenInNewIcon />}
+                      size="small"
+                    >
+                      Detail
+                    </Button>
                   </ListItem>
                 );
               })}
