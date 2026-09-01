@@ -1,5 +1,7 @@
 import { z } from "zod";
-import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
+import { adminProcedure, createTRPCRouter, publicProcedure } from "@/server/api/trpc";
+import { getServerEnv } from "@/lib/env";
+import { buildApkObjectKey, createDownloadUrl, createUploadUrl } from "@/server/storage/s3";
 
 export const releaseRouter = createTRPCRouter({
   list: publicProcedure
@@ -12,7 +14,35 @@ export const releaseRouter = createTRPCRouter({
       });
     }),
 
-  createMetadata: publicProcedure
+  prepareUpload: adminProcedure
+    .input(
+      z.object({
+        appId: z.string().min(1),
+        versionCode: z.number().int().positive(),
+        fileName: z.string().min(1).max(120),
+        contentType: z.string().default("application/vnd.android.package-archive"),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const app = await ctx.db.mobileApp.findUniqueOrThrow({
+        where: { id: input.appId },
+      });
+      const objectKey = buildApkObjectKey({
+        packageName: app.packageName,
+        versionCode: input.versionCode,
+        fileName: input.fileName,
+      });
+
+      return {
+        objectKey,
+        uploadUrl: await createUploadUrl({
+          objectKey,
+          contentType: input.contentType,
+        }),
+      };
+    }),
+
+  createMetadata: adminProcedure
     .input(
       z.object({
         appId: z.string(),
@@ -26,6 +56,7 @@ export const releaseRouter = createTRPCRouter({
       }),
     )
     .mutation(({ ctx, input }) => {
+      const env = getServerEnv();
       return ctx.db.appRelease.create({
         data: {
           appId: input.appId,
@@ -36,7 +67,32 @@ export const releaseRouter = createTRPCRouter({
           apkObjectKey: input.apkObjectKey,
           apkSizeBytes: input.apkSizeBytes,
           apkSha256: input.apkSha256,
+          storageObject: {
+            create: {
+              provider: env.STORAGE_PROVIDER.toUpperCase() === "S3" ? "S3" : "R2",
+              bucket: env.S3_BUCKET,
+              objectKey: input.apkObjectKey,
+              contentType: "application/vnd.android.package-archive",
+              sizeBytes: input.apkSizeBytes,
+              sha256: input.apkSha256,
+            },
+          },
         },
       });
+    }),
+
+  downloadUrl: publicProcedure
+    .input(z.object({ releaseId: z.string().min(1) }))
+    .query(async ({ ctx, input }) => {
+      const release = await ctx.db.appRelease.findFirstOrThrow({
+        where: { id: input.releaseId, isActive: true },
+        select: { apkObjectKey: true, apkSha256: true, apkSizeBytes: true },
+      });
+
+      return {
+        downloadUrl: await createDownloadUrl(release.apkObjectKey),
+        apkSha256: release.apkSha256,
+        apkSizeBytes: Number(release.apkSizeBytes),
+      };
     }),
 });

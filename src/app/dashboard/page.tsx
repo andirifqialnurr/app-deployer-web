@@ -4,8 +4,21 @@ import StorageIcon from "@mui/icons-material/Storage";
 import { Grid, Stack, Typography } from "@mui/material";
 import { AppShell } from "@/components/app-shell";
 import { StatCard } from "@/components/stat-card";
+import { formatBytes } from "@/lib/format";
+import { db } from "@/server/db";
 
-export default function DashboardPage() {
+export const dynamic = "force-dynamic";
+
+export default async function DashboardPage() {
+  const [appCount, releaseCount, storage] = await Promise.all([
+    db.mobileApp.count({ where: { isActive: true } }),
+    db.appRelease.count({ where: { isActive: true } }),
+    db.appRelease.aggregate({
+      where: { isActive: true },
+      _sum: { apkSizeBytes: true },
+    }),
+  ]);
+
   return (
     <AppShell title="Dashboard">
       <Stack spacing={3}>
@@ -14,13 +27,13 @@ export default function DashboardPage() {
         </Typography>
         <Grid container spacing={2}>
           <Grid item xs={12} md={4}>
-            <StatCard icon={<AppsIcon />} label="Apps" value="0" />
+            <StatCard icon={<AppsIcon />} label="Apps" value={String(appCount)} />
           </Grid>
           <Grid item xs={12} md={4}>
-            <StatCard icon={<CloudUploadIcon />} label="Releases" value="0" />
+            <StatCard icon={<CloudUploadIcon />} label="Releases" value={String(releaseCount)} />
           </Grid>
           <Grid item xs={12} md={4}>
-            <StatCard icon={<StorageIcon />} label="Storage" value="0 GB" />
+            <StatCard icon={<StorageIcon />} label="Storage" value={formatBytes(storage._sum.apkSizeBytes ?? 0)} />
           </Grid>
         </Grid>
       </Stack>

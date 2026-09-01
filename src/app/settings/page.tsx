@@ -15,6 +15,12 @@ export default function SettingsPage() {
           <Typography variant="subtitle2">Storage provider</Typography>
           <Typography color="text.secondary">{getStorageProviderLabel()}</Typography>
         </Paper>
+        <Paper variant="outlined" sx={{ p: 3 }}>
+          <Typography variant="subtitle2">App URL</Typography>
+          <Typography color="text.secondary">
+            {process.env.APP_BASE_URL ?? "Not configured"}
+          </Typography>
+        </Paper>
       </Stack>
     </AppShell>
   );

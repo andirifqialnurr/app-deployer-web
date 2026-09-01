@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
+import { adminProcedure, createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 
 export const appRouter = createTRPCRouter({
   list: publicProcedure.query(({ ctx }) => {
@@ -16,7 +16,7 @@ export const appRouter = createTRPCRouter({
     });
   }),
 
-  create: publicProcedure
+  create: adminProcedure
     .input(
       z.object({
         name: z.string().min(2).max(80),

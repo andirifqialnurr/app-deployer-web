@@ -13,6 +13,7 @@ coverage
 .vercel
 .turbo
 .bun
+tsconfig.tsbuildinfo
 
 # Logs and local databases
 *.log
