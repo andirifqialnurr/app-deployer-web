@@ -4,7 +4,7 @@ out
 dist
 coverage
 
-# Environment and secrets
+# Environment and secrets 
 .env
 .env.*
 !.env.example
