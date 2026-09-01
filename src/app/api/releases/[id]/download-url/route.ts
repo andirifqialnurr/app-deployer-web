@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createDownloadUrl } from "@/server/storage/s3";
+import { getServerEnv } from "@/lib/env";
 import { db } from "@/server/db";
 
 export const runtime = "nodejs";
@@ -24,7 +24,8 @@ export async function GET(
     return NextResponse.json({ error: "Release not found" }, { status: 404 });
   }
 
-  const downloadUrl = await createDownloadUrl(release.apkObjectKey);
+  const env = getServerEnv();
+  const downloadUrl = new URL(`/api/releases/${release.id}/download`, env.APP_BASE_URL).toString();
 
   return NextResponse.json({
     releaseId: release.id,

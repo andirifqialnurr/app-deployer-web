@@ -1,5 +1,4 @@
-import { redirect } from "next/navigation";
-import { createDownloadUrl } from "@/server/storage/s3";
+import { createDownloadResponse } from "@/server/storage/s3";
 import { db } from "@/server/db";
 
 export const runtime = "nodejs";
@@ -20,6 +19,8 @@ export async function GET(
   }
 
   const fileName = `${release.app.packageName}-${release.versionCode}.apk`;
-  const signedUrl = await createDownloadUrl(release.apkObjectKey, fileName);
-  redirect(signedUrl);
+  return createDownloadResponse({
+    objectKey: release.apkObjectKey,
+    fileName,
+  });
 }

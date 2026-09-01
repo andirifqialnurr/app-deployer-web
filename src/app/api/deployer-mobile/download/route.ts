@@ -1,6 +1,5 @@
-import { redirect } from "next/navigation";
 import { getDeployerMobileConfig } from "@/lib/env";
-import { createDownloadUrl } from "@/server/storage/s3";
+import { createDownloadResponse } from "@/server/storage/s3";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -15,10 +14,8 @@ export async function GET() {
   }
 
   const versionName = config.versionName === "Not set" ? "latest" : config.versionName;
-  const signedUrl = await createDownloadUrl(
-    config.objectKey,
-    `app-deployer-mobile-${versionName}.apk`,
-  );
-
-  redirect(signedUrl);
+  return createDownloadResponse({
+    objectKey: config.objectKey,
+    fileName: `app-deployer-mobile-${versionName}.apk`,
+  });
 }

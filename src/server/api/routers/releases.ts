@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { adminProcedure, createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { getServerEnv } from "@/lib/env";
-import { buildApkObjectKey, createDownloadUrl, createUploadUrl } from "@/server/storage/s3";
+import { buildApkObjectKey, createUploadUrl } from "@/server/storage/s3";
 
 export const releaseRouter = createTRPCRouter({
   list: publicProcedure
@@ -101,11 +101,12 @@ export const releaseRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const release = await ctx.db.appRelease.findFirstOrThrow({
         where: { id: input.releaseId, isActive: true },
-        select: { apkObjectKey: true, apkSha256: true, apkSizeBytes: true },
+        select: { id: true, apkSha256: true, apkSizeBytes: true },
       });
+      const env = getServerEnv();
 
       return {
-        downloadUrl: await createDownloadUrl(release.apkObjectKey),
+        downloadUrl: new URL(`/api/releases/${release.id}/download`, env.APP_BASE_URL).toString(),
         apkSha256: release.apkSha256,
         apkSizeBytes: Number(release.apkSizeBytes),
       };

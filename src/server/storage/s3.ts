@@ -1,6 +1,8 @@
+import { Readable } from "node:stream";
 import {
   DeleteObjectCommand,
   GetObjectCommand,
+  type GetObjectCommandOutput,
   PutObjectCommand,
   S3Client,
 } from "@aws-sdk/client-s3";
@@ -54,6 +56,54 @@ export async function createDownloadUrl(objectKey: string, fileName?: string) {
   });
 
   return getSignedUrl(createStorageClient(), command, { expiresIn: 900 });
+}
+
+function toWebStream(body: GetObjectCommandOutput["Body"]) {
+  if (!body) {
+    throw new Error("Storage object has no readable body.");
+  }
+
+  if (body instanceof ReadableStream) {
+    return body;
+  }
+
+  if ("transformToWebStream" in body && typeof body.transformToWebStream === "function") {
+    return body.transformToWebStream();
+  }
+
+  if (body instanceof Readable) {
+    return Readable.toWeb(body) as ReadableStream<Uint8Array>;
+  }
+
+  throw new Error("Storage object body is not streamable.");
+}
+
+function safeAttachmentFileName(fileName: string) {
+  return fileName.replace(/[\\/\r\n"]/g, "_");
+}
+
+export async function createDownloadResponse(input: {
+  objectKey: string;
+  fileName: string;
+}) {
+  const env = getServerEnv();
+  const command = new GetObjectCommand({
+    Bucket: env.S3_BUCKET,
+    Key: input.objectKey,
+  });
+  const object = await createStorageClient().send(command);
+  const fileName = safeAttachmentFileName(input.fileName);
+  const headers = new Headers({
+    "Cache-Control": "private, no-store",
+    "Content-Disposition": `attachment; filename="${fileName}"; filename*=UTF-8''${encodeURIComponent(fileName)}`,
+    "Content-Type": object.ContentType ?? "application/vnd.android.package-archive",
+  });
+
+  if (object.ContentLength !== undefined) {
+    headers.set("Content-Length", object.ContentLength.toString());
+  }
+
+  return new Response(toWebStream(object.Body), { headers });
 }
 
 export async function deleteObject(objectKey: string) {
