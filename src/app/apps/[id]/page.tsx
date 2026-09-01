@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import { notFound } from "next/navigation";
 import { AppShell } from "@/components/app-shell";
+import { DeleteResourceButton } from "@/components/delete-resource-button";
 import { formatBytes, formatDate } from "@/lib/format";
 import { db } from "@/server/db";
 
@@ -42,9 +43,16 @@ export default async function AppDetailPage({
     <AppShell
       title={app.name}
       action={
-        <Button href="/releases#upload-apk" variant="contained" startIcon={<CloudDownloadIcon />}>
-          Upload APK
-        </Button>
+        <Stack direction="row" spacing={1}>
+          <Button href="/releases#upload-apk" variant="contained" startIcon={<CloudDownloadIcon />}>
+            Upload APK
+          </Button>
+          <DeleteResourceButton
+            endpoint={`/api/admin/apps/${app.id}`}
+            label="Delete App"
+            confirmText={`Hapus ${app.name} dan semua release APK-nya?`}
+          />
+        </Stack>
       }
     >
       <Stack spacing={2}>
@@ -81,12 +89,17 @@ export default async function AppDetailPage({
                     <Stack direction="row" spacing={1} alignItems="center">
                       <Chip label={release.channel.toLowerCase()} size="small" />
                       <Button
-                        href={`/api/releases/${release.id}/download-url`}
+                        href={`/api/releases/${release.id}/download`}
                         size="small"
                         variant="outlined"
                       >
-                        URL
+                        Download
                       </Button>
+                      <DeleteResourceButton
+                        endpoint={`/api/admin/releases/${release.id}`}
+                        label="Delete"
+                        confirmText={`Hapus release v${release.versionName}?`}
+                      />
                     </Stack>
                   </ListItem>
                 ))}

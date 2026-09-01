@@ -24,6 +24,9 @@
 - [x] App detail page.
 - [x] Release upload form.
 - [x] Release list per app.
+- [x] Release download button.
+- [x] Delete app button.
+- [x] Delete release button.
 - [x] Storage settings read-only panel.
 
 ## Phase 4: Upload Flow
@@ -33,6 +36,8 @@
 - [x] Calculate SHA-256 client-side.
 - [x] Save release metadata after upload succeeds.
 - [x] Validate APK file extension.
+- [x] Delete APK object from R2 when release is deleted.
+- [x] Delete all APK objects from R2 when app is deleted.
 
 ## Phase 5: Mobile API
 

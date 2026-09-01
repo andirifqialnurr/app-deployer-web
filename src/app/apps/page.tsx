@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import Link from "next/link";
 import { AppShell } from "@/components/app-shell";
+import { DeleteResourceButton } from "@/components/delete-resource-button";
 import { createAppAction } from "@/server/actions/apps";
 import { db } from "@/server/db";
 
@@ -84,6 +85,11 @@ export default async function AppsPage() {
                     >
                       Detail
                     </Button>
+                    <DeleteResourceButton
+                      endpoint={`/api/admin/apps/${app.id}`}
+                      label="Delete"
+                      confirmText={`Hapus ${app.name} dan semua release APK-nya?`}
+                    />
                   </ListItem>
                 );
               })}

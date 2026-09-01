@@ -1,4 +1,9 @@
-import { GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import {
+  DeleteObjectCommand,
+  GetObjectCommand,
+  PutObjectCommand,
+  S3Client,
+} from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { getServerEnv } from "@/lib/env";
 
@@ -38,12 +43,25 @@ export async function createUploadUrl(input: {
   return getSignedUrl(createStorageClient(), command, { expiresIn: 900 });
 }
 
-export async function createDownloadUrl(objectKey: string) {
+export async function createDownloadUrl(objectKey: string, fileName?: string) {
   const env = getServerEnv();
   const command = new GetObjectCommand({
     Bucket: env.S3_BUCKET,
     Key: objectKey,
+    ResponseContentDisposition: fileName
+      ? `attachment; filename="${fileName.replaceAll('"', "")}"`
+      : undefined,
   });
 
   return getSignedUrl(createStorageClient(), command, { expiresIn: 900 });
+}
+
+export async function deleteObject(objectKey: string) {
+  const env = getServerEnv();
+  const command = new DeleteObjectCommand({
+    Bucket: env.S3_BUCKET,
+    Key: objectKey,
+  });
+
+  await createStorageClient().send(command);
 }

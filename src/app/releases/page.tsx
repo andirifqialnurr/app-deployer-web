@@ -10,6 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import { AppShell } from "@/components/app-shell";
+import { DeleteResourceButton } from "@/components/delete-resource-button";
 import { UploadReleaseForm } from "@/components/upload-release-form";
 import { formatBytes, formatDate } from "@/lib/format";
 import { db } from "@/server/db";
@@ -62,7 +63,21 @@ export default async function ReleasesPage() {
                     primary={`${release.app.name} v${release.versionName} (${release.versionCode})`}
                     secondary={`${release.app.packageName} - ${formatBytes(release.apkSizeBytes)} - ${formatDate(release.createdAt)}`}
                   />
-                  <Chip label={release.channel.toLowerCase()} size="small" />
+                  <Stack direction="row" spacing={1} alignItems="center">
+                    <Chip label={release.channel.toLowerCase()} size="small" />
+                    <Button
+                      href={`/api/releases/${release.id}/download`}
+                      size="small"
+                      variant="outlined"
+                    >
+                      Download
+                    </Button>
+                    <DeleteResourceButton
+                      endpoint={`/api/admin/releases/${release.id}`}
+                      label="Delete"
+                      confirmText={`Hapus release ${release.app.name} v${release.versionName}?`}
+                    />
+                  </Stack>
                 </ListItem>
               ))}
             </List>
