@@ -48,6 +48,6 @@ await client.send(
   }),
 );
 
-console.log(`Uploaded ${apkPath}`);
+console.log(`Replaced bootstrap object with ${apkPath}`);
 console.log(`Bucket: ${process.env.S3_BUCKET}`);
 console.log(`Object: ${objectKey}`);

@@ -6,6 +6,8 @@ coverage
 
 # Environment and secrets 
 .env
+.deploy-artifacts
+mobile-signing.env
 .env.*
 !.env.example
 
