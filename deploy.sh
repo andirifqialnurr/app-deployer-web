@@ -56,6 +56,22 @@ docker compose build web
 echo "Starting database ..."
 docker compose up -d postgres
 
+echo "Waiting for database readiness ..."
+for attempt in {1..30}; do
+  if docker compose exec -T postgres sh -c 'pg_isready -U "$POSTGRES_USER" -d "$POSTGRES_DB"' >/dev/null 2>&1; then
+    echo "Database is ready."
+    break
+  fi
+
+  if [[ "$attempt" -eq 30 ]]; then
+    echo "Database did not become ready in time." >&2
+    docker compose logs --tail=80 postgres >&2
+    exit 1
+  fi
+
+  sleep 2
+done
+
 echo "Running database migrations ..."
 docker compose run --rm web bunx prisma migrate deploy
 
