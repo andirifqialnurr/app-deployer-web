@@ -47,6 +47,7 @@
 - [x] Bootstrap App Deployer Mobile download endpoint.
 - [x] Public endpoint for app list.
 - [x] Public endpoint for latest release by package name.
+- [x] Public endpoint for app revisions by app id.
 - [x] Signed download URL endpoint.
 - [ ] Optional token auth for private access.
 
@@ -60,11 +61,11 @@
 
 ## Phase 7: Mobile Release History API
 
-- [ ] Add an authenticated endpoint to list active revisions for one app.
-- [ ] Return version name, version code, channel, upload date, APK size, SHA-256, and changelog.
+- [x] Add an MVP endpoint to list active revisions for one app.
+- [x] Return version name, version code, channel, upload date, APK size, SHA-256, and changelog.
 - [ ] Return app icon metadata or a safe icon URL for the mobile detail page.
-- [ ] Define stable ordering for revisions by version code and upload time.
-- [ ] Filter inactive apps and inactive releases consistently.
+- [x] Define stable ordering for revisions by version code and upload time.
+- [x] Filter inactive apps and inactive releases consistently.
 - [ ] Add pagination if the revision history becomes large.
 - [ ] Add API contract tests for empty, single-release, and multi-release histories.
 
