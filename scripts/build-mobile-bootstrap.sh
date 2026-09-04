@@ -4,8 +4,8 @@ set -euo pipefail
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 WEB_DIR="$(cd -- "$SCRIPT_DIR/.." && pwd)"
 MOBILE_REPO_DIR="${MOBILE_REPO_DIR:-$WEB_DIR/../app-deployer-mobile}"
-MOBILE_KEYSTORE_PATH="${MOBILE_KEYSTORE_PATH:-/opt/app-deployer/secrets/app-deployer-mobile-release.jks}"
-MOBILE_SIGNING_ENV_FILE="${MOBILE_SIGNING_ENV_FILE:-/opt/app-deployer/secrets/mobile-signing.env}"
+MOBILE_KEYSTORE_PATH="${MOBILE_KEYSTORE_PATH:-/opt/apps/app-deployer/secrets/app-deployer-mobile-release.jks}"
+MOBILE_SIGNING_ENV_FILE="${MOBILE_SIGNING_ENV_FILE:-/opt/apps/app-deployer/secrets/mobile-signing.env}"
 MOBILE_BUILDER_IMAGE="${MOBILE_BUILDER_IMAGE:-app-deployer-mobile-builder:3.44.0}"
 OUTPUT_PATH="${1:?Usage: build-mobile-bootstrap.sh <output-apk-path>}"
 
