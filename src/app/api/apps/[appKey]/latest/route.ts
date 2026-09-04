@@ -9,9 +9,9 @@ const channelSchema = z.enum(["DEV", "STABLE"]).default("STABLE");
 
 export async function GET(
   request: Request,
-  { params }: { params: Promise<{ packageName: string }> },
+  { params }: { params: Promise<{ appKey: string }> },
 ) {
-  const { packageName } = await params;
+  const { appKey } = await params;
   const url = new URL(request.url);
   const channel = channelSchema.parse(url.searchParams.get("channel") ?? "STABLE");
 
@@ -20,7 +20,7 @@ export async function GET(
       channel,
       isActive: true,
       app: {
-        packageName,
+        packageName: appKey,
         isActive: true,
       },
     },

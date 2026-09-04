@@ -9,9 +9,9 @@ const channelSchema = z.enum(["DEV", "STABLE"]).optional();
 
 export async function GET(
   request: Request,
-  { params }: { params: Promise<{ id: string }> },
+  { params }: { params: Promise<{ appKey: string }> },
 ) {
-  const { id } = await params;
+  const { appKey } = await params;
   const url = new URL(request.url);
   const channelResult = channelSchema.safeParse(
     url.searchParams.get("channel") ?? undefined,
@@ -22,7 +22,7 @@ export async function GET(
   }
 
   const app = await db.mobileApp.findFirst({
-    where: { id, isActive: true },
+    where: { id: appKey, isActive: true },
     select: { id: true },
   });
 
