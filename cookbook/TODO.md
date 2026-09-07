@@ -116,3 +116,19 @@
 - [ ] Verify a selected older revision cannot silently downgrade an installed app.
 - [ ] Verify the bootstrap APK replacement still works after web image rebuild.
 - [ ] Verify the public HTTPS endpoint and private download endpoint from a physical device.
+
+## Phase 12: OneSignal Update Notifications
+
+- [ ] Create and configure the OneSignal Android application for App Deployer.
+- [ ] Configure Firebase credentials in OneSignal without committing secrets to the repository.
+- [ ] Add server-side OneSignal REST API configuration through protected environment variables.
+- [ ] Add a server-side OneSignal client for sending update notifications.
+- [ ] Trigger a notification only after a release has been successfully saved and activated.
+- [ ] Include `appId`, release id, package name, version name, and version code in the notification data payload.
+- [ ] Define the notification deep-link contract for opening the matching mobile app detail page.
+- [ ] Define the initial targeting strategy for App Deployer device subscriptions.
+- [ ] Prevent duplicate notifications when release creation is retried or replayed.
+- [ ] Handle OneSignal delivery failures without rolling back a successfully saved release.
+- [ ] Add structured logging that excludes OneSignal API keys, device identifiers, and signed URLs.
+- [ ] Add an end-to-end acceptance check for release upload, OneSignal notification delivery, deep-link navigation, and update action visibility.
+- [ ] Document that OneSignal is hosted and that the VPS only manages the App Deployer integration.
