@@ -41,7 +41,8 @@ export function UploadReleaseForm({ apps }: { apps: AppOption[] }) {
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const form = new FormData(event.currentTarget);
+    const formElement = event.currentTarget;
+    const form = new FormData(formElement);
     const file = form.get("apk") as File | null;
     const appId = String(form.get("appId") ?? "");
     const versionName = String(form.get("versionName") ?? "");
@@ -115,7 +116,7 @@ export function UploadReleaseForm({ apps }: { apps: AppOption[] }) {
       setState("done");
       setMessage("Release berhasil disimpan.");
       setFileName("");
-      event.currentTarget.reset();
+      formElement.reset();
       router.refresh();
     } catch (error) {
       setState("error");
