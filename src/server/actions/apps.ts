@@ -3,11 +3,12 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import { androidPackageNameSchema } from "@/lib/android-package-name";
 import { db } from "@/server/db";
 
 const createAppSchema = z.object({
   name: z.string().trim().min(2).max(80),
-  packageName: z.string().trim().min(3).max(160),
+  packageName: androidPackageNameSchema,
   description: z.string().trim().max(240).optional(),
 });
 

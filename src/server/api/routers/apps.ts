@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { androidPackageNameSchema } from "@/lib/android-package-name";
 import { adminProcedure, createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 
 export const appRouter = createTRPCRouter({
@@ -20,7 +21,7 @@ export const appRouter = createTRPCRouter({
     .input(
       z.object({
         name: z.string().min(2).max(80),
-        packageName: z.string().min(3).max(160),
+        packageName: androidPackageNameSchema,
         description: z.string().max(240).optional(),
       }),
     )
@@ -31,7 +32,7 @@ export const appRouter = createTRPCRouter({
   latest: publicProcedure
     .input(
       z.object({
-        packageName: z.string().min(3),
+        packageName: androidPackageNameSchema,
         channel: z.enum(["DEV", "STABLE"]).default("STABLE"),
       }),
     )

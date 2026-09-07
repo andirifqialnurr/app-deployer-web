@@ -101,7 +101,13 @@ export default async function AppsPage() {
             <Stack spacing={2}>
               <Typography variant="h6">New App</Typography>
               <TextField name="name" label="App name" required />
-              <TextField name="packageName" label="Package name" required />
+              <TextField
+                name="packageName"
+                label="Android package name"
+                placeholder="com.example.myapp"
+                helperText="Gunakan applicationId Android dari APK, bukan nama proyek atau slug."
+                required
+              />
               <TextField name="description" label="Description" inputProps={{ maxLength: 240 }} />
               <Button type="submit" variant="contained" startIcon={<AddIcon />}>
                 Save App
