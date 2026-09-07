@@ -15,6 +15,8 @@ function createStorageClient() {
   return new S3Client({
     endpoint: env.S3_ENDPOINT,
     region: env.S3_REGION,
+    requestChecksumCalculation: "WHEN_REQUIRED",
+    responseChecksumValidation: "WHEN_REQUIRED",
     credentials: {
       accessKeyId: env.S3_ACCESS_KEY_ID,
       secretAccessKey: env.S3_SECRET_ACCESS_KEY,
@@ -45,14 +47,11 @@ export async function createUploadUrl(input: {
   return getSignedUrl(createStorageClient(), command, { expiresIn: 900 });
 }
 
-export async function createDownloadUrl(objectKey: string, fileName?: string) {
+export async function createDownloadUrl(objectKey: string, _fileName?: string) {
   const env = getServerEnv();
   const command = new GetObjectCommand({
     Bucket: env.S3_BUCKET,
     Key: objectKey,
-    ResponseContentDisposition: fileName
-      ? `attachment; filename="${fileName.replaceAll('"', "")}"`
-      : undefined,
   });
 
   return getSignedUrl(createStorageClient(), command, { expiresIn: 900 });

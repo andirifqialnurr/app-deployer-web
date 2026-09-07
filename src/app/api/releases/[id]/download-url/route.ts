@@ -38,6 +38,7 @@ export async function GET(
   return NextResponse.json({
     releaseId: release.id,
     downloadUrl,
+    fallbackDownloadUrl: `/api/releases/${release.id}/download`,
     directDownload: true,
     apkSha256: release.apkSha256,
     apkSizeBytes: Number(release.apkSizeBytes),
