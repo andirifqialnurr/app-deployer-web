@@ -81,16 +81,38 @@ function safeAttachmentFileName(fileName: string) {
   return fileName.replace(/[\\/\r\n"]/g, "_");
 }
 
+function normalizeSingleByteRange(range?: string | null) {
+  if (!range) return null;
+
+  const trimmed = range.trim();
+  if (/^bytes=(\d+-\d*|-\d+)$/.test(trimmed)) {
+    return trimmed;
+  }
+
+  return undefined;
+}
+
 export async function createDownloadResponse(input: {
   objectKey: string;
   fileName: string;
   range?: string | null;
 }) {
   const env = getServerEnv();
+  const range = normalizeSingleByteRange(input.range);
+  if (range === undefined) {
+    return new Response("Invalid Range", {
+      status: 416,
+      headers: {
+        "Accept-Ranges": "bytes",
+        "Cache-Control": "private, no-store",
+      },
+    });
+  }
+
   const command = new GetObjectCommand({
     Bucket: env.S3_BUCKET,
     Key: input.objectKey,
-    ...(input.range ? { Range: input.range } : {}),
+    ...(range ? { Range: range } : {}),
   });
   const object = await createStorageClient().send(command);
   const fileName = safeAttachmentFileName(input.fileName);
