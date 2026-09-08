@@ -114,7 +114,18 @@ export async function createDownloadResponse(input: {
     Key: input.objectKey,
     ...(range ? { Range: range } : {}),
   });
-  const object = await createStorageClient().send(command);
+  let object: GetObjectCommandOutput;
+  try {
+    object = await createStorageClient().send(command);
+  } catch (error) {
+    console.error("APK download object read failed", {
+      objectKey: input.objectKey,
+      fileName: input.fileName,
+      hasRange: Boolean(range),
+      error: error instanceof Error ? error.message : String(error),
+    });
+    throw error;
+  }
   const fileName = safeAttachmentFileName(input.fileName);
   const headers = new Headers({
     "Accept-Ranges": "bytes",

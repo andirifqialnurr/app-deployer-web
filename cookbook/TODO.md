@@ -82,7 +82,7 @@
 - [ ] Verify R2/S3 partial-object reads are passed through without breaking SHA-256 validation.
 - [ ] Decide whether true pause/resume uses backend streaming range support or direct signed R2 URLs.
 - [ ] Keep SHA-256 and size metadata consistent with the actual object.
-- [ ] Add download failure logging without logging credentials or signed URLs.
+- [x] Add download failure logging without logging credentials or signed URLs.
 - [ ] Add an operational reconciliation check for database releases whose R2 object is missing.
 
 ## Phase 9: App and Revision Presentation
