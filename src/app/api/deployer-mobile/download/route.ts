@@ -4,7 +4,7 @@ import { createDownloadResponse } from "@/server/storage/s3";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-export async function GET() {
+export async function GET(request: Request) {
   const config = getDeployerMobileConfig();
 
   if (!config.objectKey) {
@@ -17,5 +17,6 @@ export async function GET() {
   return createDownloadResponse({
     objectKey: config.objectKey,
     fileName: `app-deployer-mobile-${versionName}.apk`,
+    range: request.headers.get("range"),
   });
 }

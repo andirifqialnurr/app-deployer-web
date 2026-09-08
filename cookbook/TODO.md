@@ -78,7 +78,7 @@
 - [x] Preserve `Content-Length`, `Content-Type`, and `Content-Disposition` for APK downloads.
 - [x] Decide whether background downloads use the current streaming route or a direct signed R2 URL.
 - [x] Add HTTP `Range` and `Content-Range` support to `/api/releases/{id}/download` for resumable APK downloads.
-- [ ] Add HTTP `Range` and `Content-Range` support to `/api/deployer-mobile/download` if bootstrap downloads need resume.
+- [x] Add HTTP `Range` and `Content-Range` support to `/api/deployer-mobile/download` if bootstrap downloads need resume.
 - [ ] Verify R2/S3 partial-object reads are passed through without breaking SHA-256 validation.
 - [ ] Decide whether true pause/resume uses backend streaming range support or direct signed R2 URLs.
 - [ ] Keep SHA-256 and size metadata consistent with the actual object.
