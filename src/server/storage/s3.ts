@@ -84,15 +84,18 @@ function safeAttachmentFileName(fileName: string) {
 export async function createDownloadResponse(input: {
   objectKey: string;
   fileName: string;
+  range?: string | null;
 }) {
   const env = getServerEnv();
   const command = new GetObjectCommand({
     Bucket: env.S3_BUCKET,
     Key: input.objectKey,
+    ...(input.range ? { Range: input.range } : {}),
   });
   const object = await createStorageClient().send(command);
   const fileName = safeAttachmentFileName(input.fileName);
   const headers = new Headers({
+    "Accept-Ranges": "bytes",
     "Cache-Control": "private, no-store",
     "Content-Disposition": `attachment; filename="${fileName}"; filename*=UTF-8''${encodeURIComponent(fileName)}`,
     "Content-Type": object.ContentType ?? "application/vnd.android.package-archive",
@@ -101,8 +104,14 @@ export async function createDownloadResponse(input: {
   if (object.ContentLength !== undefined) {
     headers.set("Content-Length", object.ContentLength.toString());
   }
+  if (object.ContentRange) {
+    headers.set("Content-Range", object.ContentRange);
+  }
 
-  return new Response(toWebStream(object.Body), { headers });
+  return new Response(toWebStream(object.Body), {
+    status: object.ContentRange ? 206 : 200,
+    headers,
+  });
 }
 
 export async function deleteObject(objectKey: string) {

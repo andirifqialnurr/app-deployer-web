@@ -75,9 +75,9 @@
 - [ ] Ensure a user cannot download a release outside the access policy.
 - [ ] Keep APK objects private in R2/S3.
 - [x] Return a short-lived direct R2 download URL with an authenticated web download fallback.
-- [ ] Preserve `Content-Length`, `Content-Type`, and `Content-Disposition` for APK downloads.
+- [x] Preserve `Content-Length`, `Content-Type`, and `Content-Disposition` for APK downloads.
 - [x] Decide whether background downloads use the current streaming route or a direct signed R2 URL.
-- [ ] Add HTTP `Range` and `Content-Range` support to `/api/releases/{id}/download` for resumable APK downloads.
+- [x] Add HTTP `Range` and `Content-Range` support to `/api/releases/{id}/download` for resumable APK downloads.
 - [ ] Add HTTP `Range` and `Content-Range` support to `/api/deployer-mobile/download` if bootstrap downloads need resume.
 - [ ] Verify R2/S3 partial-object reads are passed through without breaking SHA-256 validation.
 - [ ] Decide whether true pause/resume uses backend streaming range support or direct signed R2 URLs.

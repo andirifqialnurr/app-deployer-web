@@ -5,7 +5,7 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function GET(
-  _request: Request,
+  request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
@@ -22,5 +22,6 @@ export async function GET(
   return createDownloadResponse({
     objectKey: release.apkObjectKey,
     fileName,
+    range: request.headers.get("range"),
   });
 }
