@@ -63,7 +63,7 @@
 
 - [x] Add an MVP endpoint to list active revisions for one app.
 - [x] Return version name, version code, channel, upload date, APK size, SHA-256, and changelog.
-- [ ] Return app icon metadata or a safe icon URL for the mobile detail page.
+- [x] Return app icon metadata or a safe icon URL for the mobile detail page.
 - [x] Define stable ordering for revisions by version code and upload time.
 - [x] Filter inactive apps and inactive releases consistently.
 - [ ] Add pagination if the revision history becomes large.

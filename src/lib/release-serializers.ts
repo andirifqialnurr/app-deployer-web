@@ -5,6 +5,7 @@ export type ReleaseDto = {
   appId: string;
   appName?: string;
   packageName?: string;
+  appIconUrl?: string | null;
   channel: "DEV" | "STABLE";
   versionName: string;
   versionCode: number;
@@ -37,6 +38,7 @@ export function serializeRelease(
     appId: release.appId,
     appName: release.app?.name,
     packageName: release.app?.packageName,
+    appIconUrl: release.app?.iconUrl,
     channel: release.channel,
     versionName: release.versionName,
     versionCode: release.versionCode,
