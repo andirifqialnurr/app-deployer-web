@@ -92,8 +92,8 @@
 - [ ] Improve the admin app detail page with a DeployGate-inspired release summary.
 - [ ] Show a complete revision list with channel, status, size, checksum, and changelog.
 - [ ] Make active/inactive revision state explicit to admins.
-- [ ] Keep `Distributions` and `Start Replay Capture` out of the active backend scope for now.
-- [ ] Document the future contract for distributions and replay capture without implementing it yet.
+- [x] Keep `Distributions` and `Start Replay Capture` out of the active backend scope for now.
+- [x] Document the future contract for distributions and replay capture without implementing it yet.
 
 ## Phase 10: Payment-Free Delivery Operations
 
